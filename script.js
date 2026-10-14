@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Menu Elements
     const menuScreen = document.getElementById('menu-screen');
     const canvasScreen = document.getElementById('canvas-screen');
     const widthInput = document.getElementById('width-input');
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const backToMenuBtn = document.getElementById('back-to-menu-btn');
     const canvasInfo = document.getElementById('canvas-info');
 
-    // Canvas Elements
     const canvas = document.getElementById('art-canvas');
     const ctx = canvas.getContext('2d');
     const viewport = document.getElementById('workspace-viewport');
@@ -20,23 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let canvasWidth = 1920;
     let canvasHeight = 1080;
 
-    // Viewport / Touch Transformation State
+    // Viewport / Touch Transformation State (Center-based)
     let scale = 1;
-    let posX = 0;
-    let posY = 0;
+    let centerX = 0;
+    let centerY = 0;
+    let currentRotation = 0;
 
-    // Touch interaction tracking variables
     let initialTouchDistance = null;
     let initialTouchAngle = null;
     let initialScale = 1;
     let initialRotation = 0;
-    let currentRotation = 0;
     let initialMidX = 0;
     let initialMidY = 0;
-    let initialPosX = 0;
-    let initialPosY = 0;
+    let initialCenterX = 0;
+    let initialCenterY = 0;
 
-    // --- MENU LOGIC ---
     function updatePreview() {
         let w = parseInt(widthInput.value) || 1;
         let h = parseInt(heightInput.value) || 1;
@@ -81,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- TRANSITION TO CANVAS WORKSPACE ---
     createCanvasBtn.addEventListener('click', () => {
         canvasWidth = parseInt(widthInput.value) || 1920;
         canvasHeight = parseInt(heightInput.value) || 1080;
@@ -90,16 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = canvasHeight;
         canvasInfo.textContent = `${canvasWidth} × ${canvasHeight}`;
 
-        // Fill canvas default background with white
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        // Switch screens
         menuScreen.classList.remove('active');
         canvasScreen.classList.add('active');
 
-        // Center canvas initially in the viewport
-        centerCanvas();
+        fitCanvasToScreen();
     });
 
     backToMenuBtn.addEventListener('click', () => {
@@ -107,27 +99,26 @@ document.addEventListener('DOMContentLoaded', () => {
         menuScreen.classList.add('active');
     });
 
-    function centerCanvas() {
+    function fitCanvasToScreen() {
         const vW = viewport.clientWidth;
         const vH = viewport.clientHeight;
 
-        // Fit canvas nicely inside viewport with padding
-        const scaleX = (vW * 0.8) / canvasWidth;
-        const scaleY = (vH * 0.8) / canvasHeight;
+        // Scale so at least two edges touch the screen (fullscreen fill attempt)
+        const scaleX = vW / canvasWidth;
+        const scaleY = vH / canvasHeight;
         scale = Math.min(scaleX, scaleY);
 
-        posX = (vW - canvasWidth * scale) / 2;
-        posY = (vH - canvasHeight * scale) / 2;
+        centerX = vW / 2;
+        centerY = vH / 2;
         currentRotation = 0;
 
         updateTransform();
     }
 
     function updateTransform() {
-        transformWrapper.style.transform = `translate(${posX}px, ${posY}px) scale(${scale}) rotate(${currentRotation}deg)`;
+        transformWrapper.style.transform = `translate(${centerX}px, ${centerY}px) scale(${scale}) rotate(${currentRotation}deg)`;
     }
 
-    // --- MULTI-TOUCH ZOOM & ROTATE GESTURES ---
     function getDistance(t1, t2) {
         return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
     }
@@ -145,31 +136,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             initialMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
             initialMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-            initialPosX = posX;
-            initialPosY = posY;
+            initialCenterX = centerX;
+            initialCenterY = centerY;
         }
     }, { passive: false });
 
     viewport.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2 && initialTouchDistance !== null) {
-            e.preventDefault(); // Stop default browser pinch-zoom/scroll behavior
+            e.preventDefault();
 
             const currentDistance = getDistance(e.touches[0], e.touches[1]);
             const currentAngle = getAngle(e.touches[0], e.touches[1]);
 
-            // Calculate new scale & rotation simultaneously
             const scaleFactor = currentDistance / initialTouchDistance;
-            scale = Math.max(0.1, Math.min(10, initialScale * scaleFactor));
+            scale = Math.max(0.1, Math.min(20, initialScale * scaleFactor));
             
-            let angleDelta = currentAngle - initialTouchAngle;
+            const angleDelta = currentAngle - initialTouchAngle;
             currentRotation = initialRotation + angleDelta;
 
-            // Handle panning during multi-touch midpoint movement
             const currentMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
             const currentMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
             
-            posX = initialPosX + (currentMidX - initialMidX);
-            posY = initialPosY + (currentMidY - initialMidY);
+            centerX = initialCenterX + (currentMidX - initialMidX);
+            centerY = initialCenterY + (currentMidY - initialMidY);
 
             updateTransform();
         }
@@ -182,6 +171,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial menu setup run
     updatePreview();
 });
