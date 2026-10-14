@@ -2,63 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Art Program - Main Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Art Program</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for a clean modern UI -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="menu-container">
-        <!-- Banner Image -->
-        <div class="banner-wrapper">
-            <img src="https://placehold.co/800x200/1e1e24/ffffff?text=Art+Program" alt="Art Program Banner" class="banner-img">
-        </div>
 
-        <!-- Section Header -->
-        <h2 class="section-title">New Canvas</h2>
+    <!-- MAIN MENU SCREEN -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-container">
+            <div class="banner-wrapper">
+                <img src="https://placehold.co/800x200/000000/ffffff?text=Art+Program" alt="Art Program Banner" class="banner-img">
+            </div>
 
-        <div class="menu-content">
-            <!-- Left Side: Controls (Inputs & Presets) -->
-            <div class="controls-panel">
-                <!-- Custom Dimensions -->
-                <div class="dimension-inputs">
-                    <div class="input-group">
-                        <label for="width-input">Width (px)</label>
-                        <input type="number" id="width-input" value="1920" min="1" max="10000">
+            <h2 class="section-title">New Canvas</h2>
+
+            <div class="menu-content">
+                <div class="controls-panel">
+                    <div class="dimension-inputs">
+                        <div class="input-group">
+                            <label for="width-input">Width (px)</label>
+                            <input type="number" id="width-input" value="1920" min="1" max="10000">
+                        </div>
+                        <span class="dimension-x">×</span>
+                        <div class="input-group">
+                            <label for="height-input">Height (px)</label>
+                            <input type="number" id="height-input" value="1080" min="1" max="10000">
+                        </div>
                     </div>
-                    <span class="dimension-x">×</span>
-                    <div class="input-group">
-                        <label for="height-input">Height (px)</label>
-                        <input type="number" id="height-input" value="1080" min="1" max="10000">
+
+                    <label class="presets-label">Presets</label>
+                    <div class="presets-grid">
+                        <button class="preset-btn" data-width="1920" data-height="1080">1920 × 1080 <span class="preset-name">Full HD</span></button>
+                        <button class="preset-btn" data-width="1080" data-height="1080">1080 × 1080 <span class="preset-name">Square</span></button>
+                        <button class="preset-btn" data-width="1280" data-height="720">1280 × 720 <span class="preset-name">HD 720p</span></button>
+                        <button class="preset-btn" data-width="3840" data-height="2160">3840 × 2160 <span class="preset-name">4K Ultra</span></button>
+                        <button class="preset-btn" data-width="800" data-height="600">800 × 600 <span class="preset-name">Classic 4:3</span></button>
+                        <button class="preset-btn" data-width="1000" data-height="1500">1000 × 1500 <span class="preset-name">Portrait</span></button>
                     </div>
                 </div>
 
-                <!-- 6 Presets -->
-                <label class="presets-label">Presets</label>
-                <div class="presets-grid">
-                    <button class="preset-btn" data-width="1920" data-height="1080">1920 × 1080 <span class="preset-name">Full HD</span></button>
-                    <button class="preset-btn" data-width="1080" data-height="1080">1080 × 1080 <span class="preset-name">Square</span></button>
-                    <button class="preset-btn" data-width="1280" data-height="720">1280 × 720 <span class="preset-name">HD 720p</span></button>
-                    <button class="preset-btn" data-width="3840" data-height="2160">3840 × 2160 <span class="preset-name">4K Ultra</span></button>
-                    <button class="preset-btn" data-width="800" data-height="600">800 × 600 <span class="preset-name">Classic 4:3</span></button>
-                    <button class="preset-btn" data-width="1000" data-height="1500">1000 × 1500 <span class="preset-name">Portrait</span></button>
+                <div class="preview-panel">
+                    <div class="preview-container" id="preview-container">
+                        <div class="preview-box" id="preview-box">
+                            <span id="preview-dimensions">1920 × 1080</span>
+                        </div>
+                    </div>
+                    <p class="preview-caption">Canvas Ratio Preview</p>
                 </div>
             </div>
 
-            <!-- Right Side: Dynamic Canvas Size Preview -->
-            <div class="preview-panel">
-                <div class="preview-container" id="preview-container">
-                    <div class="preview-box" id="preview-box">
-                        <span id="preview-dimensions">1920 × 1080</span>
-                    </div>
-                </div>
-                <p class="preview-caption">Canvas Ratio Preview</p>
+            <button id="create-canvas-btn" class="create-btn">Create Canvas</button>
+        </div>
+    </div>
+
+    <!-- CANVAS WORKSPACE SCREEN -->
+    <div id="canvas-screen" class="screen">
+        <div class="workspace-viewport" id="workspace-viewport">
+            <div class="canvas-transform-wrapper" id="canvas-transform-wrapper">
+                <canvas id="art-canvas"></canvas>
             </div>
         </div>
-
-        <!-- Create Canvas Button -->
-        <button id="create-canvas-btn" class="create-btn">Create Canvas</button>
+        <!-- Top bar overlay for easy navigation back or info -->
+        <div class="workspace-nav">
+            <button id="back-to-menu-btn" class="icon-btn">← Menu</button>
+            <span id="canvas-info" class="canvas-info">1920 × 1080</span>
+        </div>
     </div>
 
     <script src="script.js"></script>
