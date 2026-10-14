@@ -1,8 +1,8 @@
 :root {
     --bg-color: #000000;
     --card-bg: #0a0a0c;
-    --accent-color: #3b82f6;
-    --accent-hover: #2563eb;
+    --accent-color: #6366f1;
+    --accent-hover: #4f46e5;
     --text-color: #ffffff;
     --text-muted: #71717a;
     --border-color: #18181b;
@@ -166,7 +166,7 @@ body {
 
 .preset-btn.active {
     border-color: var(--accent-color);
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .preset-name {
@@ -231,6 +231,10 @@ body {
     cursor: pointer;
 }
 
+.create-btn:hover {
+    background-color: var(--accent-hover);
+}
+
 /* Drawing Workspace Screen */
 #canvas-screen {
     background-color: #000000;
@@ -242,7 +246,7 @@ body {
     height: 100%;
     position: relative;
     overflow: hidden;
-    touch-action: none; /* Crucial for custom touch manipulation */
+    touch-action: none;
 }
 
 .canvas-transform-wrapper {
@@ -254,9 +258,13 @@ body {
 }
 
 #art-canvas {
-    background-color: #ffffff; /* Default canvas background white */
+    background-color: #ffffff;
     display: block;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
 }
 
 .workspace-nav {
